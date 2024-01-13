@@ -1,0 +1,170 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+ofstream outfile("environmental data.txt");
+
+class localenvdata
+{
+protected:
+string location;
+
+public:
+int temp;
+int uv;
+double lum;
+int humid;
+localenvdata(string loc):location(loc){}
+virtual void print(){}
+
+};
+
+class temperature: public localenvdata
+{
+public:
+temperature(string loc):localenvdata(loc){}
+void settemp(int x)
+{
+  if (temp>60)
+  {
+    cout<<"Temperature value is too high (in case value is correct, contact emergency services immediately)"<<endl;
+  }
+  else
+  {
+  temp=x;
+    cout<<"temperature set for location "<<location<<endl;
+    outfile<<"temperature for location "<<location<<": "<<temp<<endl;
+  }
+}
+
+void print() override
+{
+  cout<<"temperature for "<<location<<" is "<<temp<<" degrees Celsius"<<endl;
+}
+
+};
+
+class humidity: public localenvdata
+{
+public:
+humidity(string loc):localenvdata(loc){}
+void sethumidity(int x)
+{
+  if (x>100)
+  {
+    cout<< "humidity value is too high. check source for possible system fault"<<endl;
+  }
+  else
+  {
+    humid=x;
+    cout<< "humidity set for location "<<location<<endl;
+    outfile<<"humidity for location "<<location<<": "<<humid<<endl;
+  }
+}
+void print() override
+{
+  cout<<"humidity for "<<location<<" is "<<humid<<"%"<<endl;
+}
+};
+
+class solaruv: public localenvdata
+{
+public:
+solaruv(string loc):localenvdata(loc){}
+void setsolaruv(int x)
+{
+  if (x>11)
+  {
+    cout<<"value out of standardized UV scale (in case value is correct, contact emergency services immediately)"<<endl;
+  }
+  else
+  { uv=x;
+      cout<< "recieved UV value set for location "<<location<<endl;
+      outfile<<"UV index value for location "<<location<<": "<<uv<<endl;
+  }
+}
+void print() override
+{
+  cout<< "UV levels for "<<location<<" is "<<uv<<endl;
+}
+
+};
+
+class luminance: public localenvdata
+{
+public:
+luminance(string loc):localenvdata(loc){}
+void setluminance(double x)
+{
+  if (x>120000)
+  {
+    cout<<"luminance value is too high (if value is correct, find shelter immediately)"<<endl;
+  }
+  else
+  {
+    lum=x;
+    cout<< "luminance set for location "<<location<<endl;
+    outfile<<"luminance for location "<<location<<": "<<lum<<" nits"<<endl;
+  }
+}
+void print() override
+{
+  cout<< "luminance for "<<location<<" is "<<lum<<" nits"<<endl;
+}
+  
+};
+
+int main()
+{
+  cout<<"Welcome to M.E.D.A.S v0.1."<<endl;
+  cout<<"Enter your location: "<<endl;
+  string l;
+  cin>>l;
+  int t;
+  int hum;
+  double lum;
+  int uv;
+  cout<<"Enter data values as follows"<<endl;
+  cout<<"temperature in celsius: "<<endl;
+  cin>>t;
+  cout<<"luminance in nits: "<<endl;
+  cin>>lum;
+  cout<<"percentage humidity: "<<endl;
+  cin>>hum;
+  cout<<"UV index: "<<endl;
+  cin>>uv;
+  cout<<endl;
+  localenvdata l1(l);
+  temperature temp1(l);
+  humidity h1(l);
+  luminance lum1(l);
+  solaruv uv1(l);
+  temp1.settemp(t);
+  temp1.print();
+  h1.sethumidity(hum);
+  h1.print();
+  lum1.setluminance(lum);
+  lum1.print();
+  uv1.setsolaruv(uv);
+  uv1.print();
+  cout<<endl;
+  cout<<endl;
+  cout<<"Previously stored data: "<<endl;
+  
+  ifstream inputfile("prior data.txt");
+  string pdata="null";
+  
+  while(getline(inputfile,pdata))
+    {
+      cout<<pdata<<endl;
+    }
+  inputfile.close();
+  if (pdata=="null")
+  {cout<<"no prior data"<<endl;}
+  
+  cout<<endl;
+  cout<<"Thank you for using M.E.D.A.S v1.3.\nProject by Arslan Naqvi (BCS231079) for Object-Oriented Programming course Final Project\n Multilateral Environmental Data Aggregation System"<<endl;
+  return 0;
+}
