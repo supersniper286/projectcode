@@ -27,7 +27,7 @@ public:
 temperature(string loc):localenvdata(loc){}
 void settemp(int x)
 {
-  if (temp>60)
+  if (x>60)
   {
     cout<<"Temperature value is too high (in case value is correct, contact emergency services immediately)"<<endl;
   }
